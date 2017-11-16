@@ -10,7 +10,7 @@ import UIKit
 class ImageCell: UITableViewCell {
     var isLiked = false
     var cellData = ImageObject()
-    
+    var defaults = UserDefaults.standard
     @IBOutlet weak var contentImage: UIImageView!
     @IBOutlet weak var likeButton: UIButton!
     @IBOutlet weak var likeCount: UILabel!
@@ -48,23 +48,40 @@ class ImageCell: UITableViewCell {
             }
         }
     }
+    
     @objc func buttonPressed(sender: UIButton!) {
-        let successfulCall = ImageViewController().heartPressedSuccessful(cellData.mediaID, isLiked: isLiked)
-        if successfulCall {
-            if isLiked {
-                setButtonOff()
-            } else {
-                setButtonOn()
+        // Update UI
+        if self.isLiked {
+            self.setButtonOff()
+        } else {
+            self.setButtonOn()
+        }
+        ApiManager.sharedInstance.changeLikeStatus(defaults.string(forKey: defaultKeys.accessToken), mediaID: cellData.mediaID, isLiked: isLiked) { (success, error) in
+            if success {
+            }
+            if error != nil {
+                // If unsuccessful reset UI
+                DispatchQueue.main.async {
+                    if self.isLiked {
+                        self.setButtonOff()
+                    } else {
+                        self.setButtonOn()
+                    }
+                }
+                let alert = UIAlertController.init(title: "Error", message: error, preferredStyle: .alert)
+                let okayAction = UIAlertAction.init(title: "OK", style: .cancel, handler: nil)
+                alert.addAction(okayAction)
+                UIApplication.topViewController()?.present(alert, animated: true, completion: nil)
             }
         }
     }
+    
     func setButtonOn() {
         isLiked = true
         cellData.likeCount = cellData.likeCount!+1
         likeCount.text = String(describing:cellData.likeCount!)
         likeButton.setImage( onImage, for: UIControlState() )
         likeButton.setImage( onImage, for: .selected )
-        self.layer.borderWidth = 2.0
     }
 
     func setButtonOff() {
@@ -73,6 +90,5 @@ class ImageCell: UITableViewCell {
         likeCount.text = String(describing:cellData.likeCount!)
         likeButton.setImage( offImage, for: UIControlState() )
         likeButton.setImage( offImage, for: .selected )
-        self.layer.borderWidth = 0.0
     }
 }
