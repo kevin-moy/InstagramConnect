@@ -10,18 +10,12 @@ import UIKit
 
 class ImageViewController: UITableViewController {
 
-  //  var accessToken: String = ""
     var imageFeed = ImageViewModel()
     var defaults = UserDefaults.standard
     
     override func viewDidLoad() {
         super.viewDidLoad()
         getImagesForUser()
-    }
-
-    override func didReceiveMemoryWarning() {
-        super.didReceiveMemoryWarning()
-        // Dispose of any resources that can be recreated.
     }
     
     func getImagesForUser() {
@@ -58,19 +52,25 @@ class ImageViewController: UITableViewController {
         self.present(alertController, animated: true, completion: nil)
     }
     
-    func heartPressed(_ mediaID: String!, isLiked: Bool) {
+    func heartPressedSuccessful(_ mediaID: String!, isLiked: Bool) -> Bool {
+        var isSuccess: Bool = false
         ApiManager.sharedInstance.changeLikeStatus(defaults.string(forKey: defaultKeys.accessToken), mediaID: mediaID, isLiked: isLiked) { (success, error) in
-            print(success)
             if success {
-                self.getImagesForUser()
-                //self.tableView.reloadData()
+                isSuccess = true
             }
-             if error != nil {
-                let alertController = UIAlertController.init(title: "Error", message: error, preferredStyle: .alert)
+            if error != nil {
+                let alert = UIAlertController.init(title: "Error", message: error, preferredStyle: .alert)
                 let okayAction = UIAlertAction.init(title: "OK", style: .cancel, handler: nil)
-                alertController.addAction(okayAction)
-                self.present(alertController, animated: true, completion: nil)
+                alert.addAction(okayAction)
+                UIApplication.topViewController()?.present(alert, animated: true, completion: nil)
+                isSuccess = false
             }
+        }
+        if isSuccess {
+            return true
+        }
+        else {
+            return false
         }
     }
     // MARK: - Table view data source

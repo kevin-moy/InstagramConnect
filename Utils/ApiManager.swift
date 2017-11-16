@@ -57,7 +57,6 @@ class ApiManager {
     }
     
     func changeLikeStatus(_ accessToken: String!, mediaID: String!, isLiked: Bool!, completionHandler:@escaping (_ succeed: Bool, _ error: String?) -> Void) {
-        //curl -X DELETE https://api.instagram.com/v1/media/{media-id}/likes?access_token=ACCESS-TOKEN
         
         let url = URL(string: "https://api.instagram.com/v1/media/\(mediaID!)/likes?access_token=\((accessToken!))")!
         var request = URLRequest(url: url)
@@ -68,24 +67,22 @@ class ApiManager {
         else {
             request.httpMethod = "POST"
         }
-        
-        //let postString = "access_token=\((accessToken!))"
-        //request.httpBody = postString.data(using: .utf8)
+
         let task = URLSession.shared.dataTask(with: request) { data, response, error in
-            guard let data = data, error == nil else {                                                 // check for fundamental networking error
-                print("error=\(String(describing: error))")
+            // Check for networking error
+            guard let data = data, error == nil else {
                 completionHandler(false, String(describing: error))
                 return
             }
-            
-            if let httpStatus = response as? HTTPURLResponse, httpStatus.statusCode != 200 {           // check for http errors
-                print("statusCode should be 200, but is \(httpStatus.statusCode)")
+            // Check for http errors
+            if let httpStatus = response as? HTTPURLResponse, httpStatus.statusCode != 200 {
                 print("response = \(String(describing: response))")
             }
             
             let responseString = String(data: data, encoding: .utf8)
             let response = try! JSONSerialization.jsonObject(with: data, options: []) as! [String: Any]
-            if let errorString = response["error"] {
+            let meta = response["meta"] as! [String: Any]
+            if let errorString = meta["error_message"]{
                 completionHandler(false, String(describing: errorString))
             }
             print("responseString = \(String(describing: responseString))")

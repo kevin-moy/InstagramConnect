@@ -59,5 +59,8 @@ class LoginViewController: UIViewController, WKUIDelegate, WKNavigationDelegate 
     //https://stackoverflow.com/questions/36231061/wkwebview-open-links-from-certain-domain-in-safari
     //https://developer.apple.com/documentation/webkit/wknavigationaction
     //https://stackoverflow.com/questions/26364914/http-request-in-swift-with-post-method
+    // I am not refreshing the table view after every like/unlike. I don't think its necessary to as the like count is stored and updated locally.
+    // I decided not to use AlamoFire for my networking calls since I found it a little excessive to add a whole framework for 2 API calls.
+    // One problem that could occur is that I am not limiting the amount of images that is received. This could cause a problem if the user has many photos since it would take a long time to load. A way to handle this is to fetch a set amount of photos and when the user scrolls , fetch another batch keeping track of what photos you have already shown.
 }
 

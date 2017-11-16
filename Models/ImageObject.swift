@@ -14,6 +14,7 @@ class ImageObject {
     var hasLiked: Bool?
     var imageURLString: String?
     var mediaID: String?
+    
     convenience init(json: [String: Any]) {
         self.init()
     
@@ -34,7 +35,6 @@ class ImageObject {
         if let imageInfo = imageJSON["standard_resolution"] as? [String: AnyObject] {
             imageURLString = imageInfo["url"] as? String
         }
-        
         
     }
 }

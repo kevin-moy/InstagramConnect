@@ -9,7 +9,6 @@
 import UIKit
 class ImageCell: UITableViewCell {
     var isLiked = false
-    var likeTotal: Int = 0
     var cellData = ImageObject()
     
     @IBOutlet weak var contentImage: UIImageView!
@@ -31,8 +30,7 @@ class ImageCell: UITableViewCell {
     
     func setupCell(image: ImageObject) {
         cellData = image
-        likeTotal = image.likeCount!
-        likeCount.text =  String(describing:likeTotal)
+        likeCount.text =  String(describing:image.likeCount!)
         isLiked = image.hasLiked!
         likeButton.addTarget(self, action: #selector(buttonPressed), for: UIControlEvents.touchUpInside)
         if isLiked {
@@ -51,17 +49,19 @@ class ImageCell: UITableViewCell {
         }
     }
     @objc func buttonPressed(sender: UIButton!) {
-        ImageViewController().heartPressed(cellData.mediaID, isLiked: cellData.hasLiked!)
-        if isLiked {
-            setButtonOff()
-        } else {
-            setButtonOn()
+        let successfulCall = ImageViewController().heartPressedSuccessful(cellData.mediaID, isLiked: isLiked)
+        if successfulCall {
+            if isLiked {
+                setButtonOff()
+            } else {
+                setButtonOn()
+            }
         }
     }
     func setButtonOn() {
         isLiked = true
-        likeTotal = likeTotal + 1
-        likeCount.text = String(describing:likeTotal)
+        cellData.likeCount = cellData.likeCount!+1
+        likeCount.text = String(describing:cellData.likeCount!)
         likeButton.setImage( onImage, for: UIControlState() )
         likeButton.setImage( onImage, for: .selected )
         self.layer.borderWidth = 2.0
@@ -69,8 +69,8 @@ class ImageCell: UITableViewCell {
 
     func setButtonOff() {
         isLiked = false
-        likeTotal = likeTotal - 1
-        likeCount.text = String(describing:likeTotal)
+        cellData.likeCount = cellData.likeCount!-1
+        likeCount.text = String(describing:cellData.likeCount!)
         likeButton.setImage( offImage, for: UIControlState() )
         likeButton.setImage( offImage, for: .selected )
         self.layer.borderWidth = 0.0
