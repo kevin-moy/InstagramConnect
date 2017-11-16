@@ -55,7 +55,7 @@ class ApiManager {
             completionHandler(imageArray, nil)
         }
     }
-    
+    // Resource: https://stackoverflow.com/questions/26364914/http-request-in-swift-with-post-method
     func changeLikeStatus(_ accessToken: String!, mediaID: String!, isLiked: Bool!, completionHandler:@escaping (_ succeed: Bool, _ error: String?) -> Void) {
         
         let url = URL(string: "https://api.instagram.com/v1/media/\(mediaID!)/likes?access_token=\((accessToken!))")!
@@ -69,25 +69,23 @@ class ApiManager {
         }
 
         let task = URLSession.shared.dataTask(with: request) { data, response, error in
-            // Check for networking error
             guard let data = data, error == nil else {
                 completionHandler(false, String(describing: error))
                 return
             }
-            // Check for http errors
             if let httpStatus = response as? HTTPURLResponse, httpStatus.statusCode != 200 {
                 print("response = \(String(describing: response))")
             }
-            
-            let responseString = String(data: data, encoding: .utf8)
+
             let response = try! JSONSerialization.jsonObject(with: data, options: []) as! [String: Any]
             let meta = response["meta"] as! [String: Any]
-            if let errorString = meta["error_message"]{
+            if let errorString = meta["error_message"] {
                 completionHandler(false, String(describing: errorString))
             }
-            print("responseString = \(String(describing: responseString))")
+            else {
+                completionHandler(true, nil)
+            }
         }
         task.resume()
-        completionHandler(true, nil)
     }
 }

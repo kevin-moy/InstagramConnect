@@ -8,6 +8,7 @@
 
 import UIKit
 
+// Source: https://stackoverflow.com/questions/40015171/how-to-show-an-alert-from-another-class-in-swift
 extension UIApplication {
     
     static func topViewController(base: UIViewController? = UIApplication.shared.delegate?.window??.rootViewController) -> UIViewController? {
