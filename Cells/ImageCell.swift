@@ -30,7 +30,7 @@ class ImageCell: UITableViewCell {
     
     func setupCell(image: ImageObject) {
         cellData = image
-        likeCount.text =  String(describing:image.likeCount!)
+        likeCount.text =  String(describing:image.likeCount)
         isLiked = image.hasLiked!
         likeButton.addTarget(self, action: #selector(buttonPressed), for: UIControlEvents.touchUpInside)
         if isLiked {
@@ -78,16 +78,16 @@ class ImageCell: UITableViewCell {
     
     func setButtonOn() {
         isLiked = true
-        cellData.likeCount = cellData.likeCount!+1
-        likeCount.text = String(describing:cellData.likeCount!)
+        cellData.likeCount = cellData.likeCount+1
+        likeCount.text = String(describing:cellData.likeCount)
         likeButton.setImage( onImage, for: UIControlState() )
         likeButton.setImage( onImage, for: .selected )
     }
 
     func setButtonOff() {
         isLiked = false
-        cellData.likeCount = cellData.likeCount!-1
-        likeCount.text = String(describing:cellData.likeCount!)
+        cellData.likeCount = cellData.likeCount-1
+        likeCount.text = String(describing:cellData.likeCount)
         likeButton.setImage( offImage, for: UIControlState() )
         likeButton.setImage( offImage, for: .selected )
     }

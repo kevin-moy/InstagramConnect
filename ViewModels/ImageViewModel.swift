@@ -10,7 +10,7 @@ import Foundation
 
 class ImageViewModel {
     var images = [ImageObject]()
-    var test: Int = 0
+    
     func feedRequest(_ accessToken: String!, completionHandler:@escaping (_ succeed: Bool, _ total: Int?, _ error: String?) -> Void) {
         ApiManager.sharedInstance.getImages(accessToken!) { (images, error) in
             if let fetchedImages = images {

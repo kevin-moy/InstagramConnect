@@ -33,7 +33,6 @@ class LoginViewController: UIViewController, WKUIDelegate, WKNavigationDelegate 
         webView.frame = view.bounds
         webView.load(URLRequest(url: url!))
         webView.allowsBackForwardNavigationGestures = true
-        view.addSubview(webView)
         
         let myRequest = URLRequest(url: url!)
         webView.load(myRequest)

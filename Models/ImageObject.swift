@@ -10,7 +10,7 @@ import Foundation
 
 class ImageObject {
     
-    var likeCount: Int?
+    var likeCount: Int = 0
     var hasLiked: Bool?
     var imageURLString: String?
     var mediaID: String?
@@ -23,7 +23,7 @@ class ImageObject {
         }
         
         if let imageLikeCount = json["likes"] as? [String: AnyObject] {
-            likeCount = imageLikeCount["count"] as? Int
+            likeCount = imageLikeCount["count"] as? Int ?? 0
         }
         if let imageHasLiked = json["user_has_liked"] {
             hasLiked = imageHasLiked as? Bool
